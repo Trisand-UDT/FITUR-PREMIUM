@@ -1,6 +1,33 @@
 <!DOCTYPE html>
 <html lang="id" translate="no">
 <head>
+
+<!--============AWAL_LOADING_BUKA_UNDANGAN01============--!>
+
+<!-- AWAL LAYAR LOADING INSTAN -->
+<style>
+  /* Langsung sembunyikan seluruh isi web agar tidak bocor di awal */
+  body { overflow: hidden !important; }
+  #konten-utama-web { display: none; }
+</style>
+
+<div id="loader-otomatis-ts" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999999;">
+  <!-- Animasi Lingkaran Berputar -->
+  <div style="width: 45px; height: 45px; border: 4px solid #f3f3f3; border-top: 4px solid #d4af37; border-radius: 50%; animation: putarTS 1s linear infinite;"></div>
+  <!-- Teks Keterangan Loading -->
+  <p style="margin-top: 15px; font-family: sans-serif; font-size: 14px; color: #555555; letter-spacing: 0.5px;">Menyiapkan Undangan...</p>
+</div>
+
+<style>
+  @keyframes putarTS {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+<!-- AKHIR LAYAR LOADING INSTAN -->
+
+<!--============AKHIR_LOADING_BUKA_UNDANGAN01============--!>
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,8 +40,8 @@
 <meta property="og:description" content="Undangan Untuk Anda. Silahkan Klik Link ini Untuk Membuka Detail Undangan. Putra & Putri">
 
 <!-- PENTING: Ganti dengan alamat link website dan foto undangan Anda yang asli -->
-<meta property="og:url" content="img/foto/contentimage.jfif">
-<link rel="canonical" href="img/foto/contentimage.jfif">
+<meta property="og:url" content="https://trisand-udt.github.io/FITUR-PREMIUM/">
+<link rel="canonical" href="https://trisand-udt.github.io/FITUR-PREMIUM/">
 <meta property="og:image" content="img/foto/contentimage.jfif">
 
 <!-- Pengaturan Ukuran Gambar agar WhatsApp Cepat Membaca -->
@@ -3493,44 +3520,30 @@ const scrollToBox2 =  () => {
 <!--============AKHIR_NAMA_TAMU============--!>
 
 
+<!--============AWAL_LOADING_BUKA_UNDANGAN02============--!>
 
-<!--============AWAL_LOADING_BUKA_UNDANGAN============--!>
-
-<!-- KODE ANIMASI LOADING OTOMATIS (TEMPEL DI ATAS </BODY>) -->
-<div id="loader-otomatis-ts" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999999; transition: opacity 0.4s ease, visibility 0.4s ease;">
-  <!-- Animasi Lingkaran Berputar -->
-  <div style="width: 45px; height: 45px; border: 4px solid #f3f3f3; border-top: 4px solid #d4af37; border-radius: 50%; animation: putarTS 1s linear infinite;"></div>
-  <!-- Teks Keterangan Loading -->
-  <p style="margin-top: 15px; font-family: sans-serif; font-size: 14px; color: #555555; letter-spacing: 0.5px;">Menyiapkan Undangan...</p>
-</div>
-
-<style>
-  /* Menghidupkan animasi berputar */
-  @keyframes putarTS {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-</style>
-
+<!-- KODE JAVASCRIPT PELEPAS KUNCI LOADING -->
 <script>
-  // 1. Kunci layar utama agar tamu tidak bisa melihat/scroll web yang belum siap
-  document.body.style.overflow = 'hidden';
-
-  // 2. Sistem memantau proses download semua foto dan elemen web di latar belakang
+  // Sistem memantau proses download semua foto dan elemen web di latar belakang
   window.addEventListener('load', function() {
     var layarLoading = document.getElementById('loader-otomatis-ts');
     
-    // 3. Jika proses unduh sudah 100% selesai, hilangkan animasi secara halus (fade-out)
+    // 1. Hilangkan animasi secara halus (fade-out)
+    layarLoading.style.transition = 'opacity 0.4s ease, visibility 0.4s ease';
     layarLoading.style.opacity = '0';
     layarLoading.style.visibility = 'hidden';
     
-    // 4. Buka kunci halaman agar undangan asli dan tombol bawaan Anda siap digunakan
-    document.body.style.overflow = 'auto';
+    // 2. Buka kunci halaman utama agar undangan asli Anda muncul sempurna
+    document.body.style.setProperty('overflow', 'auto', 'important');
+    
+    // Menghapus elemen loading dari memori agar web semakin ringan
+    setTimeout(function() {
+      layarLoading.remove();
+    }, 400);
   });
 </script>
 
-<!--============AKHIR_LOADING_BUKA_UNDANGAN============--!>
-
+<!--============AKHIR_LOADING_BUKA_UNDANGAN02============--!>
 
 
 </body>
