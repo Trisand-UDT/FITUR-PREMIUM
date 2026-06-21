@@ -8,10 +8,20 @@
 <style>
   html, body { overflow: hidden !important; }
 </style>
-<div id="loader-layar-ts" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999999;">
-  <div style="width: 45px; height: 45px; border: 4px solid #f3f3f3; border-top: 4px solid #d4af37; border-radius: 50%; animation: putarLayarTS 1s linear infinite;"></div>
-  <p style="margin-top: 15px; font-family: sans-serif; font-size: 14px; color: #555555;">Menyiapkan Undangan, Proses Mungkin Lama Bila Anda Menggunakan Jaringan Yang Lambat...</p>
+
+<div id="loader-layar-ts" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999999; box-sizing: border-box; padding: 20px;">
+  
+  <!-- Animasi Lingkaran Berputar -->
+  <div style="width: 45px; height: 45px; border: 4px solid #f3f3f3; border-top: 4px solid #d4af37; border-radius: 50%; animation: putarLayarTS 1s linear infinite; flex-shrink: 0;"></div>
+  
+  <!-- Teks Peringatan Sudah Rapi di Tengah -->
+  <p style="margin-top: 20px; font-family: sans-serif; font-size: 14px; color: #555555; text-align: center; max-width: 300px; line-height: 1.5; margin-left: auto; margin-right: auto;">
+    Menyiapkan Undangan...<br>
+    Proses Mungkin Membutuhkan Waktu Lebih Lama Bila Anda Menggunakan Jaringan Yang Lambat...
+  </p>
+
 </div>
+
 <style>
   @keyframes putarLayarTS { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 </style>
@@ -3513,52 +3523,69 @@ const scrollToBox2 =  () => {
 
 <!--============AWAL_LOADING_BUKA_UNDANGAN02============--!>
 
+<!-- KODE KONTROL LOADING OPTIMASI JARINGAN LAMBAT -->
 <script>
-  // Mengunci layar total saat halaman sedang dimuat
+  // Mengunci layar total saat halaman sedang dimuat awal
   document.addEventListener("DOMContentLoaded", function() {
     document.body.style.setProperty('overflow', 'hidden', 'important');
+    
+    // AKTIVASI LAZY LOADING: Mencari gambar di dalam web agar tidak diunduh sekaligus
+    var gambarUndangan = document.querySelectorAll('img');
+    gambarUndangan.forEach(function(img) {
+      if(img.id !== "gambar-utama-share") { 
+        img.setAttribute('loading', 'lazy'); // Memaksa browser mengunduh foto hanya saat di-scroll
+      }
+    });
   });
 
-  // Berjalan HANYA setelah gambar, musik, dan semua aset selesai terunduh 100%
-  window.addEventListener('load', function() {
+  // Fungsi khusus untuk menghancurkan layar loading jika sudah siap
+  function hilangkanLoadingTS() {
     var layarLoadingAwal = document.getElementById('loader-layar-ts');
-    
     if (layarLoadingAwal) {
-      // 1. Hilangkan animasi loading awal karena semua aset sudah siap 100%
       layarLoadingAwal.style.transition = 'opacity 0.4s ease, visibility 0.4s ease';
       layarLoadingAwal.style.opacity = '0';
       layarLoadingAwal.style.visibility = 'hidden';
-      
-      // 2. Buka kunci layar utama agar tombol bawaan Anda bisa diklik
       document.body.style.setProperty('overflow', 'auto', 'important');
-      
-      // Hapus elemen loading awal agar tidak membebani memori HP
       setTimeout(function() { layarLoadingAwal.remove(); }, 400);
     }
+  }
 
-    // 3. JALUR AMAN: Mencegah tombol bawaan memunculkan loading ulang saat diklik
-    // Kode ini akan mencari semua elemen tombol yang mengandung kata "Buka" atau "Open"
+  // JALUR 1: Jika internet normal/cepat (Semua aset selesai terunduh 100%)
+  window.addEventListener('load', function() {
+    hilangkanLoadingTS();
+    aktifkanPengamanTombolBuka();
+  });
+
+  // JALUR 2: ANTISIPASI INTERNET LAMBAT (BATAS WAKTU AMAN)
+  // Jika dalam waktu 7 detik web macet karena internet lemot, buka paksa loading-nya!
+  setTimeout(function() {
+    var masihAdaLoading = document.getElementById('loader-layar-ts');
+    if (masihAdaLoading) {
+      console.log("Koneksi lambat dideteksi. Membuka undangan secara paksa...");
+      hilangkanLoadingTS();
+      aktifkanPengamanTombolBuka();
+    }
+  }, 7000); // 7000 milidetik = 7 detik (Bisa Anda ganti ke 5000 jika ingin 5 detik)
+
+  // Fungsi pengaman agar tombol buka bawaan tidak memicu loading ulang
+  function aktifkanPengamanTombolBuka() {
     var semuaTombol = document.querySelectorAll('button, a, div, js-buka');
-    semuaTombol.forEach(function(tombol) {
+    semuor: semuaTombol.forEach(function(tombol) {
       var teksTombol = (tombol.textContent || tombol.innerText || "").toLowerCase();
       if (teksTombol.includes('buka') || teksTombol.includes('open') || tombol.id.includes('buka') || tombol.className.includes('buka')) {
         
-        tombol.addEventListener('click', function(e) {
-          // Memastikan halaman tidak terkunci lagi dan tidak memicu animasi loading bawaan template
+        tombol.addEventListener('click', function() {
           setTimeout(function() {
             document.body.style.setProperty('overflow', 'auto', 'important');
-            // Jika ada loading lain yang tiba-tiba muncul dari template asli, kita paksa sembunyikan
             var loadingBawaanTemplate = document.querySelector('#loading, .loading, #preloader, .preloader');
             if (loadingBawaanTemplate) {
               loadingBawaanTemplate.style.setProperty('display', 'none', 'important');
             }
           }, 100);
-          
         });
       }
     });
-
-  });
+  }
 </script>
 
 <!--============AKHIR_LOADING_BUKA_UNDANGAN02============--!>
